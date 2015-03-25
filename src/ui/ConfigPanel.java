@@ -108,8 +108,7 @@ public class ConfigPanel extends JPanel implements MouseMotionListener,
 
 		Graphics2D g2d = (Graphics2D) g;
 
-		for (int i = 0; i < realization.getSize(); ++i) {
-			Vertex v = graph.getVertex(i);
+		for (Vertex v:graph.getVertices()) {
 			for (Vertex u : graph.getNeighbors(v)) {
 				Color c = Color.red;
 				if (tdModel.isTd()) {
@@ -139,9 +138,8 @@ public class ConfigPanel extends JPanel implements MouseMotionListener,
 						(float) ((pv.y() + pu.y()) / 2));
 		}
 
-		for (int i = 0; i < realization.getSize(); ++i) {
-			Vertex v = graph.getVertex(i);
-			Color c = Util.randomColor(i);
+		for (Vertex v:graph.getVertices()) {
+			Color c = Util.randomColor(v.index);
 			g2d.setColor(c);
 
 			Point2D p = realization.getPoint(v);

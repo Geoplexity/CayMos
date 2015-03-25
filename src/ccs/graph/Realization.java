@@ -24,22 +24,39 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 
+/**
+ * Represents a realization, namely the point coordinates for each vertex, of a
+ * {@link LinkageGraph}.
+ * @author doris
+ *
+ */
 public class Realization implements Serializable {
 
 	// TODO: resize? screen to mouse?
 	// static int width = 800, height = 600;
 
-	// point coordinates for each vertex
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Stores point coordinates for a set of vertex
+	 */
 	private HashMap<Vertex, Point2D> points;
 
+	/**
+	 * The associated graph of this realization
+	 */
 	private LinkageGraph graph;
 
+	/**
+	 * Returns the associated graph of this realization
+	 * @return the associated graph of this realization
+	 */
 	public LinkageGraph getGraph() {
 		return graph;
 	}
 
 	/**
-	 * Realization of empty graph
+	 * Constructs a realization of an empty graph
 	 */
 	public Realization() {
 		this.points = new HashMap<Vertex, Point2D>();
@@ -57,33 +74,61 @@ public class Realization implements Serializable {
 		}
 	}
 
+	/**
+	 * Returns the number of vertices in the underlying graph
+	 * @return the number of vertices in the underlying graph
+	 */
 	public int getSize() {
 		return graph.size();
 	}
 
-	// create a new vertex
+	/**
+	 * Add a new vertex to the underlying graph, associated with the given point
+	 * @param p the point for the new vertex
+	 * @return the new vertex added
+	 * @see #addVertex(double, double)
+	 */
 	public Vertex addVertex(Point2D p) {
 		Vertex v = graph.addVertex();
 		points.put(v, p);
 		return v;
 	}
 
+	/**
+	 * Add a new vertex to the underlying graph, associated with the given cooridnates
+	 * @param x the x coordinate for the new vertex
+	 * @param y the y coordinate for the new vertex
+	 * @return the new vertex added
+	 * @see #addVertex(Point2D)
+	 */
 	public Vertex addVertex(double x, double y) {
 		Point2D p = new Point2D(x, y);
 		return this.addVertex(p);
 	}
 
-	public Vertex removeVertex(Vertex v) {
-		graph.removeVertex(v);
+	/**
+	 * Removes the given vertex from the underlying graph
+	 * @param v the vertex to be removed
+	 * @return <code>true</code> if the given vertex is successfully removed
+	 */
+	public boolean removeVertexWithConsecutiveIndex(Vertex v) {
+		if (!graph.contains(v)) return false;
+		graph.removeVertexWithConsecutiveIndex(v);
 		points.remove(v);
-		return v;
+		return true;
 	}
 
-	public Vertex getVertex(Point2D p, double precision) {
+	/**
+	 * Returns a vertex whose point in this realization is within distance <code>tolerance</code>
+	 * from the given point
+	 * @param p
+	 * @param tolerance
+	 * @return the vertex whose point in this realization is within distance <code>tolerance</code>
+	 *         from the given point
+	 */
+	public Vertex getVertex(Point2D p, double tolerance) {
 		for (Vertex v : graph.getVertices()) {
-			if (getPoint(v).distance(p) < precision) {
-				return v;
-			}
+			if (getPoint(v).distance(p) < tolerance) { return v; }
 		}
 		return null;
 	}
@@ -224,8 +269,8 @@ public class Realization implements Serializable {
 		}
 	}
 
-	public static Realization readFromStream(ObjectInputStream in)
-			throws IOException, ClassNotFoundException {
+	public static Realization readFromStream(ObjectInputStream in) throws IOException,
+			ClassNotFoundException {
 		Realization r = new Realization();
 		int n = in.readInt(); // read size
 
@@ -239,8 +284,7 @@ public class Realization implements Serializable {
 		for (int i = 0; i < n; ++i) {
 			for (int j = 0; j < i; ++j) {
 				int adjacent = in.readInt();
-				if (adjacent == 1)
-					r.graph.addEdge(i, j);
+				if (adjacent == 1) r.graph.addEdge(i, j);
 			}
 		}
 

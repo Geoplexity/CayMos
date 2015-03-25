@@ -227,8 +227,7 @@ public class GPanel extends JPanel implements MouseListener,
 	private void drawRealization(Realization r, Graphics2D g2d) {
 		LinkageGraph graph = r.getGraph();
 		g2d.setStroke(MyStrokes.solid);
-		for (int i = 0; i < graph.size(); ++i) {
-			Vertex v = graph.getVertex(i);
+		for (Vertex v:graph.getVertices()) {
 			for (Vertex u : graph.getNeighbors(v)) {
 				if (control.isShowingCluster()) {
 					// set color according to clusters
@@ -255,8 +254,7 @@ public class GPanel extends JPanel implements MouseListener,
 			drawBase(r, g2d);
 
 		// For drawing: pink the chosen vertex
-		for (int i = 0; i < graph.size(); ++i) {
-			Vertex v = graph.getVertex(i);
+		for (Vertex v:graph.getVertices()) {
 			if (v == edgeStartV)
 				g2d.setColor(Color.PINK);
 			else {

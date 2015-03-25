@@ -87,7 +87,10 @@ public class ClusterGraph extends AbstractGraph<ClusterGraphNode> {
 	}
 
 	@Override
-	public ClusterGraphNode removeVertex(ClusterGraphNode node) {
+	public boolean removeVertex(ClusterGraphNode node) {
+		if (!this.contains(node))
+			return false;
+		
 		LinkedList<ClusterGraphNode> neighbors = this.getNeighbors(node);
 		for (ClusterGraphNode u : neighbors) {
 			getNeighbors(u).remove(node);
@@ -100,23 +103,19 @@ public class ClusterGraph extends AbstractGraph<ClusterGraphNode> {
 		else
 			clusters.remove(node.c);
 
-		return node;
+		return true;
 	}
 
-	public ClusterGraphNode removeVertex(Vertex v) {
-		if (this.vertices.containsKey(v))
-			return this.removeVertex(vertices.get(v));
-		return null;
+	public boolean removeVertex(Vertex v) {
+		return this.removeVertex(vertices.get(v));
 	}
 
-	public ClusterGraphNode removeVertex(Cluster c) {
-		if (this.clusters.containsKey(c))
-			return this.removeVertex(clusters.get(c));
-		return null;
+	public boolean removeVertex(Cluster c) {
+		return this.removeVertex(clusters.get(c));
 	}
 
 	/**
-	 * Remove the construction step (v \triangleleft (v1, v2)), by removing c1
+	 * Remove the construction step (v > (v1, v2)), by removing c1
 	 * and c2 except for the base pair of vertices (v1,v2)
 	 * 
 	 * @param c1

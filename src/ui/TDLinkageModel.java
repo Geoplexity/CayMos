@@ -235,7 +235,7 @@ public class TDLinkageModel {
 	}
 
 	public void removeVertex(Vertex v) {
-		curRealization.removeVertex(v);
+		curRealization.removeVertexWithConsecutiveIndex(v);
 	}
 
 	public void addEdge(Vertex v, Vertex u) {
