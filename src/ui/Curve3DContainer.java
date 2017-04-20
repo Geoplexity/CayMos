@@ -23,6 +23,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -38,7 +40,7 @@ import ccs.graph.TwoTuple;
  * 
  */
 public class Curve3DContainer extends JDialog implements MouseListener,
-		MouseMotionListener {
+		MouseMotionListener, KeyListener {
 
 	private int width, height;
 	private int mx, my; // the most recently recorded mouse coordinates
@@ -91,6 +93,8 @@ public class Curve3DContainer extends JDialog implements MouseListener,
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		
+		addKeyListener(this);
 
 		this.setVisible(false);
 	}
@@ -98,21 +102,21 @@ public class Curve3DContainer extends JDialog implements MouseListener,
 	double theta, phi;
 	float cosT, sinT, cosP, sinP, cosTcosP, cosTsinP, sinTcosP, sinTsinP;
 
-	int scaleFactor;
+	int scaleFactor = 50;
 	float near = 3; // distance from eye to near plane
 	float nearToObj = 1.5f; // distance from near plane to center of object
 
 	private Point project(Point3D p) {
-		int x0 = p.x;
-		int y0 = p.y;
-		int z0 = p.z;
+		double x0 = p.x;
+		double y0 = p.y;
+		double z0 = p.z;
 
 		// compute an orthographic projection
-		float x1 = cosT * x0 + sinT * z0;
-		float y1 = -sinTsinP * x0 + cosP * y0 + cosTsinP * z0;
+		double x1 = cosT * x0 + sinT * z0;
+		double y1 = -sinTsinP * x0 + cosP * y0 + cosTsinP * z0;
 
 		// now adjust things to get a perspective projection
-		float z1 = cosTcosP * z0 - sinTcosP * x0 - sinP * y0;
+		double z1 = cosTcosP * z0 - sinTcosP * x0 - sinP * y0;
 		x1 = x1 * near / (z1 + near + nearToObj);
 		y1 = y1 * near / (z1 + near + nearToObj);
 
@@ -136,8 +140,6 @@ public class Curve3DContainer extends JDialog implements MouseListener,
 		cosTsinP = cosT * sinP;
 		sinTcosP = sinT * cosP;
 		sinTsinP = sinT * sinP;
-
-		scaleFactor = width / 4;
 
 		// Background: white
 		g.setColor(Color.white);
@@ -163,7 +165,30 @@ public class Curve3DContainer extends JDialog implements MouseListener,
 			Point[] points;
 			points = new Point[curve.size()];
 			int j;
+//			
+//			double maxX = Double.MIN_VALUE;
+//			double minX = Double.MAX_VALUE;
+//			double maxY = Double.MIN_VALUE;
+//			double minY = Double.MAX_VALUE;
+//			double maxZ = Double.MIN_VALUE;
+//			double minZ = Double.MAX_VALUE;
+//			
+//			for (j = 0; j < curve.size(); ++j) {
+//				Point3D p3d = curve.getVertex(j);
+//				maxX = Math.max(maxX, p3d.x);
+//				minX = Math.min(minX, p3d.x);
+//				maxY = Math.max(maxY, p3d.y);
+//				minY = Math.min(minY, p3d.y);
+//				maxZ = Math.max(maxZ, p3d.z);
+//				minZ = Math.min(minZ, p3d.z);
+//			}
+			
 			for (j = 0; j < curve.size(); ++j) {
+//				Point3D p3d = curve.getVertex(j);
+//				p3d.x = (int) (((double) p3d.x - minX) * 500 / (maxX - minX));
+//				p3d.y = (int) (((double) p3d.y - minY) * 500 / (maxY - minY));
+//				p3d.z = (int) (((double) p3d.z - minZ) * 500 / (maxZ - minZ));
+//				points[j] = project(p3d);
 				points[j] = project(curve.getVertex(j));
 			}
 
@@ -228,6 +253,33 @@ public class Curve3DContainer extends JDialog implements MouseListener,
 
 		repaint();
 		e.consume();
+	}
+	
+
+	public void keyPressed(KeyEvent arg0) {
+	}
+
+	public void keyReleased(KeyEvent e) {
+		switch (e.getKeyChar()) {
+		case '+':
+			scaleFactor += 5;
+			drawCurves(backg);
+			repaint();
+			e.consume();
+			Debug.msg("key + pressed");
+			break;
+		case '-':
+			scaleFactor -= 5;
+			drawCurves(backg);
+			repaint();
+			e.consume();
+			Debug.msg("key - pressed");
+			break;
+		}
+		
+	}
+
+	public void keyTyped(KeyEvent arg0) {
 	}
 
 	private void draw3DPoint(Point3D p3d, Graphics g) {

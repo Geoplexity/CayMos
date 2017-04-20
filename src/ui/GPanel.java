@@ -22,6 +22,9 @@ import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -29,7 +32,12 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 import ccs.graph.Cluster;
 import ccs.graph.ConstructionStep;
@@ -44,8 +52,7 @@ import ccs.graph.Vertex;
 /**
  * Panel displaying the linkage
  */
-public class GPanel extends JPanel implements MouseListener,
-		MouseMotionListener {
+public class GPanel extends JPanel implements MouseListener, MouseMotionListener {
 
 	private static GPanel me = new GPanel();
 
@@ -56,6 +63,8 @@ public class GPanel extends JPanel implements MouseListener,
 	private GPanel() {
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		
+		setKeyBindings();
 
 		addMouseListener(FixAxisListener.getInstance());
 
@@ -612,4 +621,45 @@ public class GPanel extends JPanel implements MouseListener,
 	public void mouseMoved(MouseEvent arg0) {
 	}
 
+	private void setKeyBindings() {
+		ActionMap actionMap = getActionMap();
+		int condition = JComponent.WHEN_IN_FOCUSED_WINDOW;
+		InputMap inputMap = getInputMap(condition);
+
+		String vkLeft = "VK_LEFT";
+		String vkRight = "VK_RIGHT";
+		String vkUp = "VK_UP";
+		String vkDown = "VK_DOWN";
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), vkLeft);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), vkRight);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), vkUp);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), vkDown);
+
+		actionMap.put(vkLeft, new KeyAction(vkLeft));
+		actionMap.put(vkRight, new KeyAction(vkRight));
+		actionMap.put(vkUp, new KeyAction(vkUp));
+		actionMap.put(vkDown, new KeyAction(vkDown));
+		
+	}
+	
+	private class KeyAction extends AbstractAction {
+		public KeyAction(String actionCommand) {
+			putValue(ACTION_COMMAND_KEY, actionCommand);
+		}
+		
+		public void actionPerformed(ActionEvent actionEvt) {
+			Debug.msg(actionEvt.getActionCommand() + " pressed");
+			String actionCmd = actionEvt.getActionCommand();
+			if (actionCmd.equals("VK_LEFT")) {
+			    tdModel.translate(-5, 0);
+			} else if (actionCmd.equals("VK_RIGHT")) {
+			    tdModel.translate(5, 0);
+			} else if (actionCmd.equals("VK_UP")) {
+				tdModel.translate(0, -5);
+			} else if (actionCmd.equals("VK_DOWN")) {
+				tdModel.translate(0, 5);
+			}
+		    repaint();
+		}
+	}
 }

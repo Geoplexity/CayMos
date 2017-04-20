@@ -24,9 +24,9 @@ import ccs.graph.Realization;
 import ccs.graph.TwoTuple;
 
 class Point3D {
-	public int x, y, z;
+	public double x, y, z;
 
-	public Point3D(int X, int Y, int Z) {
+	public Point3D(double X, double Y, double Z) {
 		x = X;
 		y = Y;
 		z = Z;

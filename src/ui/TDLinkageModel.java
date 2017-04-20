@@ -60,32 +60,32 @@ public class TDLinkageModel {
 	 */
 	// TODO how about do it once only, after specifying the axis??
 	public Realization getCurRealization() {
-		if (origin != null && xAxis != null) {
-			Realization gg = curRealization.clone();
-
-			Point2D curXP = gg.getPoint(xAxis);
-			Point2D curOP = gg.getPoint(origin);
-			Vector2D rotateV = curXP.minus(curOP);
-
-			AffineTransform r = new AffineTransform();
-			r.rotate(rotateV.x(), rotateV.y());
-			try {
-				r.invert();
-			} catch (NoninvertibleTransformException e) {
-				e.printStackTrace();
-			}
-			gg.transformVertices(r);
-
-			curOP = gg.getPoint(origin);
-			// Debug.warnMsg("original op:" + originP + ", current op:" +
-			// curOP);
-			AffineTransform t = new AffineTransform();
-			Vector2D translateV = originP.minus(curOP);
-			t.translate(translateV.x(), translateV.y());
-
-			gg.transformVertices(t);
-			return gg;
-		}
+//		if (origin != null && xAxis != null) {
+//			Realization gg = curRealization.clone();
+//
+//			Point2D curXP = gg.getPoint(xAxis);
+//			Point2D curOP = gg.getPoint(origin);
+//			Vector2D rotateV = curXP.minus(curOP);
+//
+//			AffineTransform r = new AffineTransform();
+//			r.rotate(rotateV.x(), rotateV.y());
+//			try {
+//				r.invert();
+//			} catch (NoninvertibleTransformException e) {
+//				e.printStackTrace();
+//			}
+//			gg.transformVertices(r);
+//
+//			curOP = gg.getPoint(origin);
+//			// Debug.warnMsg("original op:" + originP + ", current op:" +
+//			// curOP);
+//			AffineTransform t = new AffineTransform();
+//			Vector2D translateV = originP.minus(curOP);
+//			t.translate(translateV.x(), translateV.y());
+//
+//			gg.transformVertices(t);
+//			return gg;
+//		}
 
 		return curRealization;
 	}
@@ -288,6 +288,16 @@ public class TDLinkageModel {
 		origin = o;
 		originP = curRealization.getPoint(o);
 		xAxis = x;
+	}
+	
+	public void translate(int x, int y) {
+		AffineTransform t = new AffineTransform();
+		t.translate(x, y);
+		this.curRealization.transformVertices(t);
+		
+		if (this.getTd() != null) {
+			this.getTd().translateRealization(t);
+		}
 	}
 
 	// TODO: remove this??? use this???

@@ -185,7 +185,7 @@ public class MotionModel implements ChangeListener {
 
 		motion = comp;
 		NodeSampler<Realization> s = new ComponentRealizationsSampler(TDLinkageModel
-				.getInstance().getTd(), 10);
+				.getInstance().getTd(), 100);
 		pSamples = motion.getRealizations(s);
 		sampleModel.setList(pSamples);
 

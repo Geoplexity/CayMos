@@ -17,6 +17,7 @@
 
 package ccs.graph;
 
+import java.awt.geom.AffineTransform;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -644,6 +645,10 @@ public class TDLinkage {
 			/* this.setPoint(v, newpoints.get(v)); */
 			// System.out.println(" new pos:" + getPoint(v));
 		}
+	}
+	
+	public void translateRealization(AffineTransform t) {
+		initRealization.transformVertices(t);
 	}
 
 	/**
