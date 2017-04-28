@@ -82,6 +82,7 @@ public class GPanel extends JPanel implements MouseListener, MouseMotionListener
 	private TDLinkageModel tdModel = TDLinkageModel.getInstance();
 	private CCSModel ccsModel = CCSModel.getInstance();
 	private MotionModel motionModel = MotionModel.getInstance();
+	private MeasureNonEdge measureNonEdge = MeasureNonEdge.getInstance();
 	private TraceModel traceModel = TraceModel.getInstance();
 
 	/**
@@ -264,7 +265,7 @@ public class GPanel extends JPanel implements MouseListener, MouseMotionListener
 
 		// For drawing: pink the chosen vertex
 		for (Vertex v:graph.getVertices()) {
-			if (v == edgeStartV)
+			if (v == edgeStartV || measureNonEdge.getV1()==v)
 				g2d.setColor(Color.PINK);
 			else {
 				Color c = Util.randomColor(v.index);
@@ -298,6 +299,14 @@ public class GPanel extends JPanel implements MouseListener, MouseMotionListener
 			}
 		}
 		drawBase(tdModel.getCurRealization(), g2d);
+	}
+	
+	private void measureNonEdge(Graphics2D g2d){
+		Realization graph = tdModel.getCurRealization();
+		for (int index = 0; index < measureNonEdge.getNonEdges().size(); ++index){
+			drawEdge(graph, measureNonEdge.getNonEdges().get(index), g2d);
+			drawEdgeLength(graph, measureNonEdge.getNonEdges().get(index), g2d);
+		}
 	}
 
 	// TODO: change this.
@@ -364,6 +373,10 @@ public class GPanel extends JPanel implements MouseListener, MouseMotionListener
 			return;
 		}
 
+		if(control.isMeasuringNonEdge()){
+			measureNonEdge(g2d);
+		}
+		
 		// draw trace
 		if (control.isTracingVertices()) {// && tracingVertex != null) {
 			drawTrace(g2d);
@@ -442,7 +455,7 @@ public class GPanel extends JPanel implements MouseListener, MouseMotionListener
 		// drawVertex(graph, tracingVertex, g2d);
 		// }
 
-		// draw length of canonimcal edges
+		// draw length of canonical edges
 		if (control.isShowingCompleteCayley() && control.isTracingMotion() != 3) {
 			drawCompleteCayley(g2d);
 		}
@@ -518,6 +531,23 @@ public class GPanel extends JPanel implements MouseListener, MouseMotionListener
 			Vertex v = tdModel.getVertex(clickP, clickPrecision);
 			if (v != null)
 				FlippingModel.getInstance().flipVertex(v);
+			repaint();
+			return;
+		}
+		
+		if(control.isMeasuringNonEdge()){
+			Vertex v = tdModel.getVertex(clickP, clickPrecision);
+			if (v != null && measureNonEdge.getV1() != v) {
+				if (measureNonEdge.getV1() == null){
+					measureNonEdge.addVertex(v);
+				}
+				else if (measureNonEdge.getV1() != null){
+					measureNonEdge.addVertex(v);
+				}
+			}
+			else if(measureNonEdge.getV1() == v){
+				measureNonEdge.resetV1();
+			}
 			repaint();
 			return;
 		}

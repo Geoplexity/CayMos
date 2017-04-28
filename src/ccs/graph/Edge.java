@@ -20,7 +20,7 @@ package ccs.graph;
 
 public class Edge extends Pair<Vertex> {
 
-	Edge(Vertex o1, Vertex o2) {
+	public Edge(Vertex o1, Vertex o2) {
 		super(o1, o2);
 	}
 

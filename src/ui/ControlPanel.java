@@ -503,6 +503,12 @@ public class ControlPanel extends JPanel {
 	public boolean isShowingCompleteCayley() {
 		return showCompleteCayleyBtn.isSelected();
 	}
+	
+	private JToggleButton measureNonEdgeBtn;
+	
+	public boolean isMeasuringNonEdge() {
+		return measureNonEdgeBtn.isSelected();
+	}
 
 	private JPanel pathPanel;
 
@@ -576,6 +582,7 @@ public class ControlPanel extends JPanel {
 		if (isTracingComponent()) {
 			// Case 1: tracing a component
 			pathSpinner.setVisible(true);
+			measureNonEdgeBtn.setVisible(true);
 			traceVertexBtn.setVisible(true);
 			ccsSpinner.setEnabled(false);
 			showComponentCurveBtn.setVisible(true);
@@ -589,6 +596,7 @@ public class ControlPanel extends JPanel {
 			startBtn.setVisible(false);
 			endBtn.setVisible(false);
 			genPathBtn.setVisible(false);
+			measureNonEdgeBtn.setVisible(true);
 
 			if (motionModel.getMotion() != null) {
 				// Case 2: found a path
@@ -626,7 +634,7 @@ public class ControlPanel extends JPanel {
 
 	private void initPathControl() {
 		pathPanel = new JPanel();
-		pathPanel.setPreferredSize(new Dimension(220, 180));
+		pathPanel.setPreferredSize(new Dimension(220, 195));
 		pathPanel.setBorder(BorderFactory.createLineBorder(Color.gray, 2));
 
 		genComponentBtn = new JToggleButton("generate connected component");
@@ -782,6 +790,8 @@ public class ControlPanel extends JPanel {
 				motionModel.getComponentSpinnerModel());
 		componentSpinner.setCyclic(true);
 		componentSpinner.addChangeListener(motionModel);
+		
+		measureNonEdgeBtn = new JToggleButton("Measure Non-Edge");
 
 		traceVertexBtn = new JToggleButton("trace a vertex");
 		traceVertexBtn.addActionListener(new ActionListener() {
@@ -806,6 +816,7 @@ public class ControlPanel extends JPanel {
 		pathPanel.add(pathSpinner1);
 		pathPanel.add(pathSpinner2);
 		pathPanel.add(showComponentCurveBtn);
+		pathPanel.add(measureNonEdgeBtn);
 		pathPanel.add(traceVertexBtn);
 		pathPanel.add(componentSpinner);
 
