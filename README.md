@@ -24,6 +24,10 @@ Open the eclipse IDE and do the following.
  * Click 'Run As' -> 'Java Application'.
  * Select the 'Main-ui' target and click on 'OK'.
 
+### User Gude ###
+The user guide for the project can be found [here] (https://github.com/Geoplexity/CayMos/blob/master/doc/userguide/userguide.pdf)
+
+
 ### License ###
 CayMos is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,8 +39,8 @@ The GNU GPL license can be found at [http://www.gnu.org/licenses/](http://www.gn
 Menghan Wang
 Meera Sitharam
 
-### Contact###
+### Contact ###
 Meera Sitharam, CISE @ UF
 
-### Publications###
+### Publications ###
 [Algorithm 951: Cayley Analysis of Mechanism Configuration Spaces using CayMos: Software Functionalities and Architecture] (https://dl.acm.org/citation.cfm?doid=2835205.2699462)
